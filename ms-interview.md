@@ -20,3 +20,10 @@
   - `DOMContentLoaded` and async` scripts don’t wait for each other
   - other scripts don’t wait for `async` scripts, and `async` scripts don’t wait for others
 - The `async` attribute is only for external scripts - it is ignored if the `<script>` tag has no src
+
+
+## What is the difference between span and div?
+
+The difference is that span gives the output with `display: inline` and div gives the output with `display: block`.
+
+## What is `srcset` of images?
