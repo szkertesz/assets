@@ -1,30 +1,33 @@
 Let's see Jeane's user journey on example.com.
 
 When Jeane visits example.com, __code is sent from a web server to her device of choice__: her phone, tablet, smart TV, smart watch or fridge.
+
 The code sent will __produce the user interface she sees in the browser__. This code is considered __front-end code__.
-Front-end developers focus on __building and designing the user interface (UI) and user experience (UX) of websites__ using this code.
 
-Let us take a look at my main responsibilities in my role, which could be organised around these main areas.
+1. __To provide fast loading times, we try to optimise this code line by line and optimise every asset__
 
-__Reducing load times__, __enhancing interactivity__, and __ensuring accessibility for as many user as possible__.
+   Pal and I collaborate on this multimedia optimisation effort.
 
-1. __The site should load quickly and allow the user, Jane, to start interacting with it as soon as possible__ (the latter aspect is measured with a metric called time to interactive).
-We use different __tools and metrics to measure and monitor loading performance__.
-The slide shows pagespeedinsights report, which can help identify bottlenecks and things requiring optimisation.
+   We use different __tools and metrics to measure and monitor loading performance__.
+   The slide shows a pagespeedinsights report, which can help identify bottlenecks and possible targets for optimisation.
 
-   __To provide fast loading times, we try to optimise every line of code and asset to ensure that Jeane's experience is seamless and snappy.__   Pal and I also collaborate on this optimisation effort.
+3. So, example.com __will need to become interactive and respond to events orchestrated by the user__, Jeane.
 
-2. So, example.com __will need to become interactive and respond to events orchestrated by the user__, Jeane.
-__We strive to make sure that every interaction feels reliable and pleasurable__. Whether she's clicking, scrolling, or tapping, it's gotta be as smooth as silk.
-You can see a screenshot about the performance tab of Chrome dev tools, after recording a click event on why us page of example.com. 
+   __Ideally, the interaction feels reliable and pleasurable__.
 
-3. __Accessibility is about making websites usable by as many people as possible, no matter what their ability or circumstances.__
-E.g. Jeane might be a visually impaired person, using a screenreader when visiting example.com.
-Or she might have a temporary disability - maybe a broken arm, or a baby held in one of his arms. She might have to navigate the site without using a mouse or whatever, by pressing the tab / Space / Enter / cursor keys.
+   Whether she's clicking, scrolling, swiping or tapping, it's gotta be as smooth as silk.
 
-We can also think of web performance as a subset of accessibility, when we consider what device Jeane is using to access the site and the connection speed as well.
+   We also have tools to measure runtime performance
 
-Imagine Jeane loading example.com using tethered mobile data on an ancient iPad while commuting home on public transportation. Depending on cell coverage, she might give up before it finishes loading, not accessing the site at all.
+5. Jeane might be a visually impaired person, using a screenreader when visiting example.com.
+
+   Or she might have a temporary disability - maybe a broken arm, or a baby held in one of his arms. She might have to navigate the site without using a mouse but only a keyboard and one free hand.
+
+   __Accessibility is about making websites usable by as many people as possible, no matter what their ability OR circumstances.__
+
+   Imagine Jeane loading example.com using tethered mobile data on an ancient chinese tablet while commuting home on public transportation with poor cell coverage. She might give up before it finishes loading, not accessing the site at all.
+
+   In this example we might consider web performance as a subset of accessibility.
 
 
 ***
