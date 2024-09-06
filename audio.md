@@ -9,3 +9,5 @@
 - [Elac Debut B5.2](https://www.whathifi.com/reviews/elac-debut-b52)
 - [Elac Debut Reference DBR6](https://www.whathifi.com/reviews/elac-debut-reference-dbr62)
 - Elac Uni-Fi 2.0
+
+Close to the wall: https://www.youtube.com/watch?v=1a6jxpWSR3o&t=497s
