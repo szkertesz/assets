@@ -7,7 +7,8 @@
 ## Speakers
 - [Dali Spektor 2](https://www.whathifi.com/dali/spektor-2/review)
 - [Elac Debut B5.2](https://www.whathifi.com/reviews/elac-debut-b52)
+Close to the wall: https://www.youtube.com/watch?v=1a6jxpWSR3o&t=497s
 - [Elac Debut Reference DBR6](https://www.whathifi.com/reviews/elac-debut-reference-dbr62)
 - Elac Uni-Fi 2.0
+- Jamo Concert 9 series C93II 
 
-Close to the wall: https://www.youtube.com/watch?v=1a6jxpWSR3o&t=497s
