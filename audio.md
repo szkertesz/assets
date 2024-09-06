@@ -7,3 +7,5 @@
 ## Speakers
 - [Dali Spektor 2](https://www.whathifi.com/dali/spektor-2/review)
 - [Elac Debut B5.2](https://www.whathifi.com/reviews/elac-debut-b52)
+- [Elac Debut Reference DBR6](https://www.whathifi.com/reviews/elac-debut-reference-dbr62)
+- Elac Uni-Fi 2.0
