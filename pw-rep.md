@@ -378,3 +378,45 @@ He trusted me also to collaborate with the … dev team as frontend developer, g
 Our regular bi-weekly 1-on-1s allow us to talk through challenges and focus on improvement. Our weekly team meetings offer open dialogue, where all members feel encouraged to share concerns and ideas.
 His support for personal commitments, such as family matters and professional growth, is really exceptional. He clearly promotes a healthy work-life balance and provides resources for my professional development and growth.
 His transparent communication ensures the team is always in the loop.
+
+
+***
+
+
+Here's a more polished and professional version of your self-evaluation, incorporating clarity, professionalism, and a focus on impact:
+1. Impact of Individual Contributions
+
+This year, I made several key contributions that significantly impacted the success of our team, the company, and its stakeholders:
+
+    Image Asset Optimization Project: I spearheaded a multimedia asset optimization project in collaboration with XY from the UX team and Z. We identified the top 200 image assets on the company website based on file size, and optimized them, resulting in a reduction of over 0.5 GB. This effort notably improved the user experience on affected pages by decreasing load times and enhancing overall site performance.
+    Debugging Critical Video Player Malfunction: After the launch of the --- campaign, a video player malfunction occurred on high-traffic pages. I quickly addressed this issue by debugging the video components, ensuring the player was functional again. I then proactively implemented the fix across all video-enabled components, which reduced downtime risk and ensured consistent functionality for users.
+    Refactoring Multimedia Player Architecture: As a front-end developer, I collaborated with the ... development team to refactor our multimedia player architecture. By centralizing the handling of video and audio components, I reduced code redundancy, minimized the risk of playback malfunctions, and simplified future development and maintenance efforts.
+
+Through these initiatives, I have directly contributed to enhancing the company’s digital experience, streamlining development processes, and ensuring stable performance for stakeholders and users alike.
+2. Risk and Controls
+
+Risk mitigation and process control were also key areas of my contributions this year:
+
+    Participation in Compliance Processes: I actively participated in the ... process, where I supported the team in preparing for the required procedures. My contributions included assisting stakeholders with document publishing and playing an integral role in the dry run session during the release preparation phase. This helped ensure smooth and compliant execution.
+    Timely Completion of Mandatory Trainings: I completed all required company trainings, ensuring my understanding of risk management, compliance, and internal controls remained up to date.
+    Phishing Simulations & Learning: While I initially had difficulties recognizing two phishing simulation attacks, I responded to this by completing additional security training. Since then, I have successfully identified and reported all further phishing simulations, demonstrating my commitment to improving my awareness and safeguarding company data.
+
+These actions reflect my dedication to maintaining a secure and compliant work environment and my ability to adapt quickly to challenges.
+3. Upholding Company Values and Contributing to a Positive Workplace
+
+This year, I have actively contributed to upholding our company's values, fostering a culture of excellence, and ensuring a diverse and inclusive environment:
+
+    Language Skills Improvement: To enhance my ability to communicate effectively with stakeholders and team members, I have regularly attended company-organized English language classes. As a result, I have become more confident in articulating ideas clearly and efficiently, which has positively impacted team collaboration and stakeholder engagements.
+    Supporting HR with the Hiring Process: In March, I collaborated with the HR team to address challenges they were facing during the front-end developer prescreening process. I assisted in creating technical interview questions tailored to the role and contributed to the interviewing process by facilitating the technical assessment. This helped improve the quality and relevance of our hiring process, ensuring that we identify strong candidates who align with the company’s technical needs and values.
+
+By continuously improving my communication skills and actively contributing to team growth and diversity, I have helped create a more supportive and effective workplace.
+4. Professional Development
+
+Looking ahead, I have identified two key areas where I aim to grow and develop my expertise to be even more effective:
+
+    Web Performance Optimization: I will focus on further developing my skills in web performance optimization by studying advanced techniques and the latest web platform features. My goal is to identify additional opportunities to enhance our website’s performance, delivering impactful improvements in the coming year.
+    Effective Communication: I plan to refine my communication skills further, with an emphasis on delivering concise, clear, and impactful messaging. This will enhance my ability to share ideas more effectively with both technical and non-technical stakeholders, fostering better collaboration and project outcomes.
+
+Through these efforts, I will contribute to both the technical advancement of our company’s digital platforms and the ongoing improvement of team dynamics and stakeholder relationships.
+
+This evaluation reflects my commitment to driving both technical and collaborative success in the workplace. I look forward to continuing to contribute to the company’s goals while pursuing professional growth in the upcoming year.
