@@ -364,3 +364,17 @@ Solutions
 Conclusion
 
 These solutions improved multimedia content delivery, reducing code redundancy, enhancing cross-platform functionality, and resolving iOS-specific issues, resulting in a smoother user experience across all devices.
+
+***
+
+He is extremely cautious and thorough when identifying potential risks. 
+He actively pushes knowledge-sharing within the team to reduce the "bus factor" and ensure redundancy, so that each member is able to handle any task if needed. This approach ensures business continuity and eliminates risks associated with over-reliance on specific individuals. Contingency planning and knowledge distribution is key in his approach.
+Embedding strong expertise within the team is also part of his strategy to avoid potential issues and reduce risks.
+
+He takes ownership during tough situations, like delays or errors, preventing team members from being blamed. Team members can focus on solutions without fear of blame.
+He likes to give each member exposure to different aspects of the team portfolio, leveraging everyone’s strengths. In April he tasked me with managing …, with full team support and the upcoming … will be handled by … who joined less than 6 months. This is also about putting trust into new joiners and strengthen inclusion.
+
+He trusted me also to collaborate with the … dev team as frontend developer, giving me freedom to make technical proposals, advocate certain development practices and act like a subject matter expert in specific dev topics.
+Our regular bi-weekly 1-on-1s allow us to talk through challenges and focus on improvement. Our weekly team meetings offer open dialogue, where all members feel encouraged to share concerns and ideas.
+His support for personal commitments, such as family matters and professional growth, is really exceptional. He clearly promotes a healthy work-life balance and provides resources for my professional development and growth.
+His transparent communication ensures the team is always in the loop.
