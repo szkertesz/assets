@@ -420,3 +420,18 @@ Looking ahead, I have identified two key areas where I aim to grow and develop m
 Through these efforts, I will contribute to both the technical advancement of our company’s digital platforms and the ongoing improvement of team dynamics and stakeholder relationships.
 
 This evaluation reflects my commitment to driving both technical and collaborative success in the workplace. I look forward to continuing to contribute to the company’s goals while pursuing professional growth in the upcoming year.
+
+***
+Key Achievements & Success Stories – 2023
+Image Asset Optimization Initiative: I took the initiative to launch a media asset optimization project in collaboration with X and Y. We identified and optimized the top 200 images used on xyz.com based on filesize, resulting in over 0.5 GB file size reduction.
+Refactoring Multimedia Player Architecture: 
+debugging video player
+X Collaboration: I had the privilege of joining a cross-team collaboration with X team. It’s professionally rewarding to contribute to their work, share knowledge, and making an impact on code quality of xyz.com.
+Supporting the Hiring Process of Z: I assisted in creating technical interview questions for the prescreening phase and contributed to the interviewing by facilitating the technical assessment segments. I'm proud that finally we've found X, who is valuable member of the team.
+Initiated Front-End Dev Weekly Meetings: I started regular weekly meetings with X to discuss technical topics, review the latest developments on the web platform, and address challenges we encounter in our development work. These meetings promote a sense of professional craftmanship, creating a motivating effect for us.
+
+Plans & Excitement for 2024
+Performance Optimizations: Eager to identify factors affecting web performance of x.com pages and work on improvements. I'm especially excited to explore the latest web platform features to achieve this.
+Enhancing Code Quality on X: I’m planning to propose practices that improve our code quality, e.g. coding style guides, naming conventions, and documenting best practices. I believe improving code health has a positive impact on web performance.
+Personal Growth: Committed to improving my own skills in web performance analysis, web accessibility, and I’m enthusiastic about sharing this knowledge with the team.
+
