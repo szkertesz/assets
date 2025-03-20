@@ -537,3 +537,251 @@ function setupVideoTracking(videoID) {
 // Initialize tracking when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', initializeVideoTracking);
 ```
+
+```js
+function setupVideoTracking(e) {
+    console.log('>>> *** fired setupVideoTracking vidID2="' + e + '"');
+    videojs(e).ready(function() {
+        console.log("123*****************************: " + _satellite.getVar("mediaName"));
+        MSCOM.analytics.videoName = _satellite.getVar("mediaName");
+        MSCOM.analytics.videoID = _satellite.getVar("mediaId");
+        MSCOM.analytics.videoDuration = _satellite.getVar("mediaDuration");
+        (videoDuration = 1 * Math.floor(_satellite.getVar("mediaDuration"))) % 4 == 0 && (videoDuration -= 1);
+
+        createMilestones(videoDuration);
+
+        this.on("loadstart", function() {
+            // Placeholder: Loading behavior (if needed)
+        });
+
+        videojs(e).on("timeupdate", currentTime);
+
+        // Add 'play' event listener to enforce single-video playback
+        this.on("play", function() {
+            pauseOtherVideos(e); // Ensure other videos are paused
+        });
+    });
+}
+
+// Function to pause all other videos on the page
+function pauseOtherVideos(currentVideoID) {
+    console.log(">>> Ensuring only one video plays at a time...");
+    bcPlayers.forEach(function(playerID) {
+        if (playerID !== currentVideoID) {
+            const otherPlayer = videojs(playerID);
+            if (!otherPlayer.paused()) {
+                otherPlayer.pause();
+                console.log(">>> Paused video: " + playerID);
+            }
+        }
+    });
+}
+
+// Original createMilestones function (no changes)
+function createMilestones(e) {
+    for (console.log('>>> fired createMilestones video duration="' + e + '"...'),
+        segmentLength = Math.floor(e / 4),
+        i = 0; i < 5; i++)
+        0 == i && (mileStoneSecs[i] = segmentLength * i + 1,
+            mileStoneHash[segmentLength * i + 1] = mileStoneName[i]),
+        mileStoneSecs[i] = segmentLength * i,
+        mileStoneHash[segmentLength * i] = mileStoneName[i];
+    return mileStoneSecs;
+}
+
+// Original currentTime function (no changes)
+function currentTime() {
+    Math.floor(videojs(bcPlayerObj).currentTime());
+    Math.floor(videojs(bcPlayerObj).duration() / 4);
+    currSecond = Math.floor(videojs(bcPlayerObj).currentTime());
+    mileStoneIndx = mileStoneSecs.indexOf(currSecond);
+    currTime = videojs(bcPlayerObj).currentTime();
+    prevSecond < currSecond && (secondChanged = !0,
+        videoTimePlayed += 1,
+        videoElapsedSec += 1),
+        -1 != mileStoneIndx && secondChanged && (analyticsCall(mileStoneHash[currSecond]),
+            secondChanged = !1);
+    prevSecond = Math.floor(currTime);
+    _satellite.setVar("prevSecond", prevSecond);
+}
+
+// Original analyticsCall function (no changes)
+function analyticsCall(e) {
+    MSCOM.analytics.videoMilestone = e;
+    _satellite.setVar("currSecond2", mileStoneSecs[1]);
+    "Start" == e && _satellite.setVar("currSecond2", 0);
+    MSCOM.analytics.videoCurrSecond = currSecond;
+    console.log(">>> fired restarts=" + videoRestarts + " type=" + e);
+    MSCOM.analytics.videoRestarts = "false";
+    videoRestarts > 0 && "Start" == e && (console.log('>>> fired videoRestarts="' + videoRestarts + '"'),
+        MSCOM.analytics.videoRestarts = "true");
+    _satellite.track("BC_VideoTracking");
+    nextMileStone += 1;
+    videoElapsedSec = -1;
+    "Start" == e && _satellite.setVar(MSCOM.analytics.videoName + "-Start", 1);
+    "Complete" == e && (prevSecond = -1,
+        videoTimePlayed = -1,
+        videoRestarts += 1);
+}
+
+// Updated global array to track multiple video players
+var bcPlayers = []; // Stores video IDs for all video instances
+
+var xyz1 = "BRIGHTCOVE",
+    bcPlayerObj = new Object,
+    mileStoneName = ["Start", "25%", "50%", "75%", "Complete"],
+    mileStoneHash = new Object,
+    mileStoneSecs = new Array(4),
+    currSecond = -1,
+    prevSecond = -1,
+    segmentLength = 0,
+    mileStoneIndx = -1,
+    nextMileStone = 0,
+    currTime = -1,
+    secondChanged = !1,
+    videoTimePlayed = -1,
+    videoDuration = 0,
+    videoElapsedSec = -1,
+    videoRestarts = 0,
+    videoID1 = "";
+
+// Add videoID to players array and call setup tracking
+_satellite.getVar("vId") ? (
+    videoID1 = _satellite.getVar("vId"),
+    _satellite.setVar("vId", ""),
+    bcPlayers.push(videoID1) // Add to global player tracking
+) : (
+    videoID1 = $(".videoplaylist video").attr("id"),
+    bcPlayers.push(videoID1)
+);
+
+console.log(">>> fired Video Id: " + videoID1);
+var playerID = videoID1;
+console.log(">>> fired L O O P I N G =" + videojs(playerID).loop());
+0 == videojs(playerID).loop() && (
+    console.log(">>> fired C A L L I N G setupVideoTracking..."),
+    bcPlayerObj = playerID,
+    console.log('>>> b c P l a y e r O b j="' + bcPlayerObj + '"'),
+    setupVideoTracking(playerID)
+);
+
+```
+
+```js
+// Array to hold all video player instances
+let bcPlayers = [];
+
+// Function to set up video tracking and ensure only one video plays at a time
+function setupVideoTracking(videoInstance) {
+    const videoID = videoInstance.id; // Assuming each video element has a unique ID
+
+    console.log(`>>> *** fired setupVideoTracking for video ID: "${videoID}"`);
+
+    videoInstance.ready(function() {
+        console.log("Tracking setup for video:", videoID);
+
+        // Extract video details directly from the player instance
+        const mediaName = videoInstance.mediainfo.name || "Unknown Video";
+        const mediaDuration = Math.floor(videoInstance.mediainfo.duration || 0);
+        const mediaId = videoInstance.mediainfo.id || videoID;
+
+        console.log(`Media Info: Name="${mediaName}", ID="${mediaId}", Duration="${mediaDuration}"`);
+
+        // Initialize milestones
+        (videoDuration = 1 * mediaDuration) % 4 === 0 && (videoDuration -= 1);
+        createMilestones(videoDuration);
+
+        // Set up playback-related event listeners
+        videoInstance.on("loadstart", function() {
+            // Placeholder: Handle video load start logic (if needed)
+            console.log(`Video "${videoID}" load started.`);
+        });
+
+        videoInstance.on("timeupdate", function() {
+            currentTime(videoInstance); // Pass the video instance to track progress
+        });
+
+        // Add a 'play' listener to enforce single-video playback
+        videoInstance.on("play", function() {
+            pauseOtherVideos(videoID); // Pause other videos except the current one
+        });
+    });
+}
+
+// Function to pause all other videos except the currently playing one
+function pauseOtherVideos(currentVideoID) {
+    console.log(">>> Ensuring only one video plays at a time...");
+    bcPlayers.forEach(function(player) {
+        if (player.id !== currentVideoID) {
+            if (!player.paused()) {
+                player.pause();
+                console.log(`>>> Paused video: ${player.id}`);
+            }
+        }
+    });
+}
+
+// Function to handle video milestones and trigger events
+function createMilestones(videoDuration) {
+    console.log(`>>> fired createMilestones for video duration: "${videoDuration}"`);
+    const segmentLength = Math.floor(videoDuration / 4);
+    for (let i = 0; i < 5; i++) {
+        if (i === 0) {
+            mileStoneSecs[i] = segmentLength * i + 1;
+            mileStoneHash[segmentLength * i + 1] = mileStoneName[i];
+        } else {
+            mileStoneSecs[i] = segmentLength * i;
+            mileStoneHash[segmentLength * i] = mileStoneName[i];
+        }
+    }
+    return mileStoneSecs;
+}
+
+// Function to handle current time logic and milestones
+function currentTime(videoInstance) {
+    const currSecond = Math.floor(videoInstance.currentTime());
+    const videoDuration = Math.floor(videoInstance.duration());
+    const segmentLength = Math.floor(videoDuration / 4);
+    const mileStoneIndx = mileStoneSecs.indexOf(currSecond);
+
+    if (prevSecond < currSecond) {
+        secondChanged = true;
+        videoTimePlayed += 1;
+        videoElapsedSec += 1;
+    }
+
+    if (mileStoneIndx !== -1 && secondChanged) {
+        analyticsCall(mileStoneHash[currSecond]);
+        secondChanged = false;
+    }
+
+    prevSecond = currSecond;
+}
+
+// Function to handle analytics calls (removes reliance on _satellite variables)
+function analyticsCall(milestone) {
+    console.log(`Analytics Call: Milestone "${milestone}" triggered.`);
+    console.log(`Video Milestone: ${milestone}, Video Time Played: ${videoTimePlayed}`);
+    // Add your analytics tracking code here, such as direct API calls or other methods
+}
+
+// Add references for each video instance and initialize tracking
+document.addEventListener("DOMContentLoaded", function() {
+    const videoElements = document.querySelectorAll("video"); // Get all video elements
+    videoElements.forEach(function(videoElement) {
+        const player = videojs(videoElement.id); // Initialize a video.js player instance
+        bcPlayers.push(player); // Store the player instance for later reference
+        setupVideoTracking(player); // Set up tracking for the video instance
+    });
+});
+
+// Variables and constants (retain existing ones)
+const mileStoneName = ["Start", "25%", "50%", "75%", "Complete"];
+let mileStoneHash = {};
+let mileStoneSecs = [];
+let prevSecond = -1;
+let secondChanged = false;
+let videoTimePlayed = 0;
+let videoElapsedSec = 0;
+
+```
