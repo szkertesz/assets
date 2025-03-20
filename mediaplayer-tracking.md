@@ -785,3 +785,145 @@ let videoTimePlayed = 0;
 let videoElapsedSec = 0;
 
 ```
+
+***
+
+Impact Analysis: Performance Implications of Replacing Adobe Launch Custom Code-Based Media Player Analytics with a Direct Call Rule Implementation in AEM Frontend
+
+Current Implementation (Adobe Launch Custom Code-Based Analytics)
+
+Step-by-Step Breakdown
+
+Triggering Mechanism:
+
+The rule "EBR - Click - Video Tracking" is triggered when a video element enters the viewport.
+
+It uses the entersViewport.js module with firstEntry frequency.
+
+The selector targets elements: video-js or div[data-video-id].
+
+Conditions for Execution:
+
+The custom condition script checks whether the video element has an id attribute.
+
+If an id is found, _satellite.setVar("vId", e) stores it in Adobe Launch’s data layer.
+
+The console.log("Fired vId " + e) confirms execution.
+
+The function returns true, allowing the rule to proceed.
+
+Action Execution:
+
+The rule executes an external JavaScript file (RC7ed2818a15ea44df8d262298e9df94f7-source.min.js).
+
+The script is loaded globally and executed in the page context.
+
+The external script is responsible for sending analytics events to Adobe Analytics.
+
+Media Player Tracking Logic:
+
+The implementation includes additional JavaScript for tracking video interactions using the Video.js library.
+
+The setupVideoTracking function initializes tracking by retrieving metadata (mediaName, mediaId, mediaDuration) and setting up milestone tracking.
+
+Milestone tracking divides the video duration into four equal segments (25%, 50%, 75%, Complete) and triggers analytics calls when a milestone is reached.
+
+The currentTime function listens for time updates and fires analytics events at milestone points.
+
+_stl.track("BC_VideoTracking") is used to send analytics data when a milestone is reached.
+
+A restart counter tracks whether a video has been restarted, affecting the analytics tracking logic.
+
+Custom Code for Metadata and Tracking:
+
+The external script retrieves video metadata using videojs(vidId).mediainfo and stores it using _satellite.setVar.
+
+Once the metadata is stored, _satellite.track("videoPlaylistTrack") is fired to send the tracking event.
+
+Performance Considerations of the Current Approach
+
+Dependency on _satellite.setVar: Introduces reliance on Adobe Launch's data elements, potentially affecting load times and data consistency.
+
+Custom Code Execution Overhead: The script execution occurs within the browser, possibly introducing delays in analytics events.
+
+External Script Loading: Fetching the JavaScript file from Adobe’s CDN adds a network request, increasing page load time.
+
+Viewport-Based Triggering: Can lead to unintended tracking if a video enters the viewport but isn't interacted with.
+
+Milestone Tracking Complexity: Additional processing for milestone tracking might introduce execution overhead.
+
+Proposed Implementation (Direct Call Rule-Based AEM Frontend Analytics)
+
+Step-by-Step Breakdown
+
+Triggering Mechanism:
+
+Instead of relying on entersViewport.js, the tracking logic is integrated within the AEM frontend.
+
+When a user interacts with a video (e.g., play, pause, seek), the frontend explicitly fires a Direct Call Rule (_satellite.track("videoInteraction")).
+
+Data Handling:
+
+No reliance on _satellite.setVar, as data is passed directly within the Direct Call Rule payload.
+
+The AEM frontend script retrieves video metadata and directly pushes it to Adobe Analytics.
+
+Milestone tracking logic is handled within AEM without needing additional custom JavaScript for video event listeners.
+
+A players object stores all video player instances, along with state variables such as mileStoneHash, allowing better state management.
+
+Each instance is initialized with setupVideoTracking(playerInstance), ensuring consistency across multiple videos.
+
+Action Execution:
+
+The Direct Call Rule executes within Adobe Launch, sending analytics data immediately without an external script dependency.
+
+Data Layer updates are managed within the AEM application, reducing reliance on Adobe Launch's internal mechanisms.
+
+Performance Considerations of the Proposed Approach
+
+Reduced Network Requests: Eliminates the need for fetching an external script, reducing load time.
+
+Lower Execution Overhead: Moving logic to the AEM frontend minimizes execution delays introduced by Adobe Launch.
+
+More Reliable Data Handling: Direct Call Rules ensure that tracking occurs only upon user interaction, reducing unnecessary event firing.
+
+Less Dependency on Launch Variables: Avoids _satellite.getVar and _satellite.setVar, simplifying the implementation and making debugging easier.
+
+Streamlined Milestone Tracking: Handled within AEM frontend, reducing complexity and improving efficiency.
+
+Potential Drawbacks
+
+Increased Frontend Complexity: Requires additional development effort and proper state management for multiple video instances.
+
+Higher Client-Side Processing: Tracking logic execution on the client-side could slightly increase script execution time.
+
+Dependency on AEM Implementation: Tightly coupling analytics with the AEM frontend could make future CMS migrations more difficult.
+
+Potential Data Loss in Certain Scenarios: Ensuring all tracking events fire correctly, especially if a user interacts before tracking initializes.
+
+Reliability of Direct Call Rule Execution: Requires thorough testing to ensure proper event firing and eliminate race conditions.
+
+Removal of Viewport-Based Tracking: The new approach eliminates automatic tracking when a video enters the viewport, which may lead to reporting differences.
+
+Conclusions & Next Steps
+
+Key Takeaways
+
+The current approach introduces overhead due to custom script execution, dependency on _satellite.setVar, and an additional network request.
+
+The proposed approach leverages Direct Call Rules for more efficient and reliable analytics tracking.
+
+The transition will likely result in faster page load times, more accurate event tracking, and simplified implementation.
+
+Recommended Next Steps
+
+Implement a Proof-of-Concept: Develop and test a prototype of the new implementation within AEM.
+
+Validate Data Integrity: Ensure that analytics events match those captured by the current implementation.
+
+Performance Testing: Compare load times, event latency, and accuracy between both implementations.
+
+Stakeholder Approval & Deployment Plan: Present findings and finalize the rollout strategy.
+
+By transitioning to a Direct Call Rule-based implementation, we can optimize performance and enhance the accuracy of video analytics tracking in Adobe Analytics.
