@@ -894,6 +894,14 @@ Streamlined Milestone Tracking: Handled within AEM frontend, reducing complexity
 
 Potential Drawbacks
 
+I've attached the analysis piece to this email. I’d like to point out that it does not include the empirical performance measurements we discussed earlier, as I was unable to set up proper test cases for them. To conduct those tests, I would need two instances of the same component—one with the current analytics implementation enabled and one without—and I wasn’t sure how to create this setup. Unfortunately, I also wasn’t able to ask for your advice on this.
+
+However, the write-up contains a detailed breakdown of the current implementation, which should help in understanding the challenges and potential improvements we can achieve with the DBR solution.
+
+Additionally, please review my implementation in this pull request and check with the Analytics team to see if they can help verify the direct call payload once it's deployed to QA.
+
+I hope it’s acceptable that I wasn’t able to complete the research we originally discussed.
+
 Increased Frontend Complexity: Requires additional development effort and proper state management for multiple video instances.
 
 Higher Client-Side Processing: Tracking logic execution on the client-side could slightly increase script execution time.
