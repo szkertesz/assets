@@ -158,8 +158,27 @@
 
     <script>
         class GenericExpandable {
-            constructor() {
-                this.expandableBlocks = document.querySelectorAll('[data-generic-expandable]');
+            constructor(config = {}) {
+                // Default configuration
+                this.config = {
+                    // Main selectors
+                    container: '[data-generic-expandable]',
+                    toggle: '.generic-expandable__toggle',
+                    content: '.generic-expandable__content',
+                    contentInner: '.generic-expandable__content-inner',
+                    icon: '.generic-expandable__icon',
+                    
+                    // CSS classes
+                    expandedClass: 'expanded',
+                    
+                    // ID patterns
+                    contentIdPrefix: 'generic-expandable-content',
+                    
+                    // Merge with user config
+                    ...config
+                };
+                
+                this.expandableBlocks = document.querySelectorAll(this.config.container);
                 this.init();
             }
 
@@ -172,7 +191,7 @@
             setupEventListeners() {
                 // Use event delegation for better performance
                 document.addEventListener('click', (e) => {
-                    const toggle = e.target.closest('.generic-expandable__toggle');
+                    const toggle = e.target.closest(this.config.toggle);
                     if (toggle) {
                         e.preventDefault();
                         this.togglePanel(toggle);
@@ -182,7 +201,7 @@
 
             setupKeyboardHandlers() {
                 document.addEventListener('keydown', (e) => {
-                    const toggle = e.target.closest('.generic-expandable__toggle');
+                    const toggle = e.target.closest(this.config.toggle);
                     
                     if (toggle) {
                         // Handle Space and Enter keys on toggle buttons
@@ -205,12 +224,12 @@
             setupAriaControls() {
                 // Automatically set up aria-controls for components without explicit IDs
                 this.expandableBlocks.forEach((block, index) => {
-                    const toggle = block.querySelector('.generic-expandable__toggle');
-                    const content = block.querySelector('.generic-expandable__content');
+                    const toggle = block.querySelector(this.config.toggle);
+                    const content = block.querySelector(this.config.content);
                     
                     // Only set up if aria-controls is not already present
                     if (toggle && content && !toggle.getAttribute('aria-controls')) {
-                        const contentId = content.id || `generic-expandable-content-${index}`;
+                        const contentId = content.id || `${this.config.contentIdPrefix}-${index}`;
                         content.id = contentId;
                         toggle.setAttribute('aria-controls', contentId);
                     }
@@ -282,5 +301,10 @@
         document.addEventListener('DOMContentLoaded', () => {
             window.genericExpandable = new GenericExpandable();
         });
+
+        // For demonstration - you can remove this in production
+        console.log('Generic Expandable Component loaded!');
+        console.log('Try using keyboard navigation: Tab to focus, Space/Enter to toggle, Escape to close focused panel');
+    </script>
 </body>
 </html>
