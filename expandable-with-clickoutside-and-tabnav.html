@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Expandable Component</title>
+    <style>
+        .generic-expandable__toggle[aria-expanded="true"] .generic-expandable__icon {
+            transform: rotate(180deg);
+        }
+
+        .generic-expandable__content {
+            display: none
+        }
+
+        .generic-expandable__content.expanded {
+            display: block;
+        }
+
+        .generic-expandable__content-inner {
+            padding: 0 20px 20px 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Enhanced Expandable Component</h1>
+        
+        <div>
+            <h2>Basic Usage Examples</h2>
+            
+            <!-- Example 1 -->
+            <div class="generic-expandable" data-generic-expandable>
+                <button class="generic-expandable__toggle" aria-expanded="false" aria-controls="generic-expandable-content-1">
+                    <span>What is JavaScript?</span>
+                    <svg class="generic-expandable__icon" viewBox="0 0 24 24">
+                        <path d="M7 10l5 5 5-5z"/>
+                    </svg>
+                </button>
+                <div class="generic-expandable__content" id="generic-expandable-content-1">
+                    <div class="generic-expandable__content-inner">
+                        <p>JavaScript is a high-level, interpreted programming language that is widely used for web development. It enables interactive web pages and is an essential part of web applications.</p>
+                        <p>Originally developed for client-side scripting, JavaScript is now also used for server-side development, mobile app development, and desktop applications.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Example 2 -->
+            <div class="generic-expandable" data-generic-expandable>
+                <button class="generic-expandable__toggle" aria-expanded="false" aria-controls="generic-expandable-content-2">
+                    <span>Accessibility Features</span>
+                    <svg class="generic-expandable__icon" viewBox="0 0 24 24">
+                        <path d="M7 10l5 5 5-5z"/>
+                    </svg>
+                </button>
+                <div class="generic-expandable__content" id="generic-expandable-content-2">
+                    <div class="generic-expandable__content-inner">
+                        <ul>
+                            <li><strong>Keyboard Navigation:</strong> Space and Enter keys toggle the panel</li>
+                            <li><strong>Screen Reader Support:</strong> Proper ARIA attributes for state announcement and control association</li>
+                            <li><strong>Focus Management:</strong> Clear focus indicators and logical tab order</li>
+                            <li><strong>Escape Key:</strong> Closes the focused panel</li>
+                            <li><strong>Click Outside:</strong> Automatically closes expanded panels when clicking elsewhere</li>
+                            <li><strong>Tab Navigation:</strong> Panels close when tabbing past the last interactive element</li>
+                        </ul>
+                        <p><a href="#" onclick="return false;">Sample link</a> - Try tabbing past this to see the panel close!</p>
+                        <button type="button" onclick="alert('Button clicked!')">Sample button</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Example 3 -->
+            <div class="generic-expandable" data-generic-expandable>
+                <button class="generic-expandable__toggle" aria-expanded="false" aria-controls="generic-expandable-content-3">
+                    <span>Implementation Details</span>
+                    <svg class="generic-expandable__icon" viewBox="0 0 24 24">
+                        <path d="M7 10l5 5 5-5z"/>
+                    </svg>
+                </button>
+                <div class="generic-expandable__content" id="generic-expandable-content-3">
+                    <div class="generic-expandable__content-inner">
+                        <p>This component is designed to be reusable across large projects. Simply add the <code>data-generic-expandable</code> attribute to any container with the proper markup structure.</p>
+                        <p>The component automatically initializes all expandable blocks on page load and handles all interactions through event delegation for optimal performance.</p>
+                        <p>CSS transitions provide smooth animations, and the component is fully responsive and works across all modern browsers.</p>
+                        <p><strong>New:</strong> The click-outside-to-close feature enhances usability by automatically collapsing panels when users click elsewhere on the page.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class GenericExpandable {
+            constructor(config = {}) {
+                // Default configuration
+                this.config = {
+                    // Main selectors
+                    container: '[data-generic-expandable]',
+                    toggle: '.generic-expandable__toggle',
+                    content: '.generic-expandable__content',
+                    contentInner: '.generic-expandable__content-inner',
+                    icon: '.generic-expandable__icon',
+                    
+                    // CSS classes
+                    expandedClass: 'expanded',
+                    
+                    // ID patterns
+                    contentIdPrefix: 'generic-expandable-content',
+                    
+                    // Merge with user config
+                    ...config
+                };
+                
+                this.expandableBlocks = document.querySelectorAll(this.config.container);
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.setupKeyboardHandlers();
+                this.setupAriaControls();
+                this.setupClickOutsideHandler();
+            }
+
+            setupEventListeners() {
+                // Use event delegation for better performance
+                document.addEventListener('click', (e) => {
+                    const toggle = e.target.closest(this.config.toggle);
+                    if (toggle) {
+                        e.preventDefault();
+                        this.togglePanel(toggle);
+                    }
+                });
+            }
+
+            setupKeyboardHandlers() {
+                document.addEventListener('keydown', (e) => {
+                    const toggle = e.target.closest(this.config.toggle);
+                    
+                    if (toggle) {
+                        // Handle Space and Enter keys on toggle buttons
+                        if (e.key === ' ' || e.key === 'Enter') {
+                            e.preventDefault();
+                            this.togglePanel(toggle);
+                        }
+                        
+                        // Handle Escape key on focused toggle button
+                        if (e.key === 'Escape') {
+                            const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+                            if (isExpanded) {
+                                this.closePanel(toggle);
+                            }
+                        }
+                    }
+                    
+                    // Handle Tab navigation to close panels when moving past last element
+                    if (e.key === 'Tab') {
+                        this.handleTabNavigation(e);
+                    }
+                });
+            }
+
+            handleTabNavigation(e) {
+                // Find all expanded panels
+                const expandedPanels = Array.from(this.expandableBlocks).filter(block => {
+                    const toggle = block.querySelector(this.config.toggle);
+                    return toggle && toggle.getAttribute('aria-expanded') === 'true';
+                });
+                
+                if (expandedPanels.length === 0) return;
+                
+                // Check if we're tabbing forward (not Shift+Tab)
+                if (e.shiftKey) return;
+                
+                // For each expanded panel, check if current focus is the last interactive element
+                expandedPanels.forEach(panel => {
+                    const contentArea = panel.querySelector(this.config.content);
+                    if (!contentArea) return;
+                    
+                    // Get all interactive elements within the content area
+                    const interactiveElements = this.getInteractiveElements(contentArea);
+                    
+                    if (interactiveElements.length === 0) return;
+                    
+                    const lastInteractiveElement = interactiveElements[interactiveElements.length - 1];
+                    
+                    // If currently focused element is the last interactive element in this panel
+                    if (document.activeElement === lastInteractiveElement) {
+                        // Close this panel after a short delay to allow tab to complete
+                        setTimeout(() => {
+                            const toggle = panel.querySelector(this.config.toggle);
+                            if (toggle) {
+                                this.closePanel(toggle);
+                            }
+                        }, 0);
+                    }
+                });
+            }
+
+            getInteractiveElements(container) {
+                const interactiveSelectors = [
+                    'a[href]',
+                    'button:not([disabled])',
+                    'input:not([disabled])',
+                    'select:not([disabled])',
+                    'textarea:not([disabled])'
+                ].join(', ');
+                
+                return Array.from(container.querySelectorAll(interactiveSelectors));
+            };
+                document.addEventListener('click', (e) => {
+                    // Don't proceed if the click was on a toggle button (handled elsewhere)
+                    if (e.target.closest(this.config.toggle)) {
+                        return;
+                    }
+                    
+                    // Check if click was outside all expandable containers
+                    const clickedInsideExpandable = e.target.closest(this.config.container);
+                    
+                    if (!clickedInsideExpandable) {
+                        // Click was outside all expandable components, close all expanded panels
+                        this.collapseAll();
+                    } else {
+                        // Click was inside an expandable component
+                        // Close all OTHER expanded panels (not the one that was clicked)
+                        this.expandableBlocks.forEach(block => {
+                            if (block !== clickedInsideExpandable) {
+                                const toggle = block.querySelector(this.config.toggle);
+                                if (toggle && toggle.getAttribute('aria-expanded') === 'true') {
+                                    this.closePanel(toggle);
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+
+            setupAriaControls() {
+                // Automatically set up aria-controls for components without explicit IDs
+                this.expandableBlocks.forEach((block, index) => {
+                    const toggle = block.querySelector(this.config.toggle);
+                    const content = block.querySelector(this.config.content);
+                    
+                    // Only set up if aria-controls is not already present
+                    if (toggle && content && !toggle.getAttribute('aria-controls')) {
+                        const contentId = content.id || `${this.config.contentIdPrefix}-${index}`;
+                        content.id = contentId;
+                        toggle.setAttribute('aria-controls', contentId);
+                    }
+                });
+            }
+
+            togglePanel(toggle) {
+                const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+                
+                if (isExpanded) {
+                    this.closePanel(toggle);
+                } else {
+                    this.expandPanel(toggle);
+                }
+            }
+
+            expandPanel(toggle) {
+                const content = toggle.nextElementSibling;
+                
+                // Update ARIA state
+                toggle.setAttribute('aria-expanded', 'true');
+                
+                // Add expanded class for CSS transition
+                content.classList.add('expanded');
+            }
+
+            closePanel(toggle) {
+                const content = toggle.nextElementSibling;
+                
+                // Update ARIA state
+                toggle.setAttribute('aria-expanded', 'false');
+                
+                // Remove expanded class
+                content.classList.remove('expanded');
+            }
+
+            // Public method to programmatically control panels
+            expand(selector) {
+                const block = document.querySelector(selector);
+                if (block) {
+                    const toggle = block.querySelector('.generic-expandable__toggle');
+                    if (toggle && toggle.getAttribute('aria-expanded') === 'false') {
+                        this.expandPanel(toggle);
+                    }
+                }
+            }
+
+            collapse(selector) {
+                const block = document.querySelector(selector);
+                if (block) {
+                    const toggle = block.querySelector('.generic-expandable__toggle');
+                    if (toggle && toggle.getAttribute('aria-expanded') === 'true') {
+                        this.closePanel(toggle);
+                    }
+                }
+            }
+
+            collapseAll() {
+                this.expandableBlocks.forEach(block => {
+                    const toggle = block.querySelector('.generic-expandable__toggle');
+                    if (toggle && toggle.getAttribute('aria-expanded') === 'true') {
+                        this.closePanel(toggle);
+                    }
+                });
+            }
+        }
+
+        // Initialize the component when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            window.genericExpandable = new GenericExpandable();
+        });
+    </script>
+</body>
+</html>
