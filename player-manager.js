@@ -35,9 +35,14 @@ $(document).ready(function () {
             this.loadTimer = null;
             this.loadRetries = 0;
             this.maxLoadRetries = 3;
-            this.basePlayerId = this.videoJSTag ? this.videoJSTag.id : null; // Store original ID
+            
+            // Generate unique ID immediately to prevent conflicts
+            this.basePlayerId = this.videoJSTag ? this.videoJSTag.id : null;
+            this.uniqueId = 'mp_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
             
             if (this.videoJSTag) {
+                // Ensure unique ID from the start
+                this.videoJSTag.id = this.uniqueId;
                 this.initPlayer();
             } else {
                 console.error('No video-js element found');
@@ -69,12 +74,10 @@ $(document).ready(function () {
                     
                     // Insert fresh cloned element with unique ID
                     this.videoJSTag = this.clonedVideoJSTagOriginal.cloneNode(true);
-                    this.videoJSTag.id = this.basePlayerId + '_retry_' + this.loadRetries + '_' + Date.now();
+                    this.uniqueId = 'mp_retry_' + this.loadRetries + '_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                    this.videoJSTag.id = this.uniqueId;
                     
                     this.rootElement.appendChild(this.videoJSTag);
-                } else if (this.loadRetries > 0) {
-                    // Ensure unique ID even for first element on retry
-                    this.videoJSTag.id = this.basePlayerId + '_retry_' + this.loadRetries + '_' + Date.now();
                 }
                 
                 // Ensure we have a valid element
@@ -85,6 +88,20 @@ $(document).ready(function () {
                 // Wait for DOM to be ready before creating player
                 setTimeout(() => {
                     try {
+                        // Double-check for existing players with this ID and dispose them
+                        if (window.videojs && window.videojs.getPlayers) {
+                            const players = window.videojs.getPlayers();
+                            Object.keys(players).forEach(playerId => {
+                                if (playerId === this.uniqueId && players[playerId] && !players[playerId].isDisposed()) {
+                                    try {
+                                        players[playerId].dispose();
+                                    } catch (e) {
+                                        console.warn('Error disposing existing player:', e);
+                                    }
+                                }
+                            });
+                        }
+                        
                         // Initiate (new) player
                         console.log(`Media debug: Creating player for element:`, this.videoJSTag);
                         this.player = videojs(this.videoJSTag);
