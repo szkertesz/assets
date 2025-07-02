@@ -48,14 +48,27 @@ $(document).ready(function () {
                 // Clear any existing timer
                 this.clearLoadTimer();
                 
-                // Reset DOM element BEFORE disposing player if we're retrying
-                if (this.loadRetries > 0 && this.clonedVideoJSTagOriginal) {
-                    // Dispose old player first
-                    if (this.player && !this.player.isDisposed()) {
-                        this.player.dispose();
-                    }
+                // Properly dispose old player and clean up
+                if (this.player && !this.player.isDisposed()) {
+                    const oldId = this.player.id_;
+                    this.player.dispose();
                     
-                    // Remove any existing video-js elements (in case dispose didn't clean up properly)
+                    // Force cleanup of any remaining video.js references
+                    if (window.videojs && window.videojs.getPlayer) {
+                        try {
+                            const existingPlayer = window.videojs.getPlayer(oldId);
+                            if (existingPlayer && !existingPlayer.isDisposed()) {
+                                existingPlayer.dispose();
+                            }
+                        } catch (e) {
+                            // Player might not exist in registry, ignore
+                        }
+                    }
+                }
+                
+                // Always create fresh DOM element for retries
+                if (this.loadRetries > 0 && this.clonedVideoJSTagOriginal) {
+                    // Remove any existing video-js elements
                     const existingVideoJS = this.rootElement.querySelector('video-js');
                     if (existingVideoJS && existingVideoJS.parentNode) {
                         existingVideoJS.parentNode.removeChild(existingVideoJS);
@@ -63,16 +76,23 @@ $(document).ready(function () {
                     
                     // Insert fresh cloned element
                     this.videoJSTag = this.clonedVideoJSTagOriginal.cloneNode(true);
+                    
+                    // Force unique ID to prevent conflicts
+                    const originalId = this.videoJSTag.id;
+                    this.videoJSTag.id = originalId + '_retry_' + this.loadRetries + '_' + Date.now();
+                    
                     this.rootElement.appendChild(this.videoJSTag);
-                } else if (this.player && !this.player.isDisposed()) {
-                    // First time initialization - only dispose if player exists
-                    this.player.dispose();
+                }
+                
+                // Ensure we have a valid element
+                if (!this.videoJSTag || !this.videoJSTag.parentNode) {
+                    throw new Error('No valid video-js element available for player creation');
                 }
                 
                 // Initiate (new) player
                 console.log(`Media debug: Creating player for element:`, this.videoJSTag);
                 this.player = videojs(this.videoJSTag);
-                console.log(`Media debug: Player created:`, this.player);
+                console.log(`Media debug: Player created with ID:`, this.player.id_);
                 this.loaded = false;
                 
                 // config player options
