@@ -48,19 +48,25 @@ $(document).ready(function () {
                 // Clear any existing timer
                 this.clearLoadTimer();
                 
-                // Dispose old player if exists
-                if (this.player && !this.player.isDisposed()) {
-                    this.player.dispose();
-                }
-                
-                // Reset DOM element if needed
+                // Reset DOM element BEFORE disposing player if we're retrying
                 if (this.loadRetries > 0 && this.clonedVideoJSTagOriginal) {
+                    // Dispose old player first
+                    if (this.player && !this.player.isDisposed()) {
+                        this.player.dispose();
+                    }
+                    
+                    // Remove any existing video-js elements (in case dispose didn't clean up properly)
                     const existingVideoJS = this.rootElement.querySelector('video-js');
                     if (existingVideoJS && existingVideoJS.parentNode) {
                         existingVideoJS.parentNode.removeChild(existingVideoJS);
                     }
+                    
+                    // Insert fresh cloned element
                     this.videoJSTag = this.clonedVideoJSTagOriginal.cloneNode(true);
                     this.rootElement.appendChild(this.videoJSTag);
+                } else if (this.player && !this.player.isDisposed()) {
+                    // First time initialization - only dispose if player exists
+                    this.player.dispose();
                 }
                 
                 // Initiate (new) player
