@@ -11,7 +11,7 @@ proficiency is the ability to use and understand language accurately
 the job requires a precise use of language
 
 ## alternatives to BORING 
-1. I hate our weekly meetings. They are so TESIOUS.
+1. I hate our weekly meetings. They are so TEDIOUS.
 2. This is a DULL movie! Let's watch something else.
 3. My clothes are so DREARY! I'm going shopping.
 4. We had to read a MIND-NUMBING report.
@@ -29,6 +29,11 @@ to make a COMPLAINT
 - Let me know if you need anything else or want to discuss any details.
 - If you require more information or have any questions, feel free to [contact me].
 
-
+### "Sorry for the delay in my response."
+A slightly more formal variation:
+    "Apologies for the delay in getting back to you."
+    "I apologize for the delayed response."
+Something more casual:
+    "Sorry for the late reply!"
 
 
