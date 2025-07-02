@@ -35,6 +35,7 @@ $(document).ready(function () {
             this.loadTimer = null;
             this.loadRetries = 0;
             this.maxLoadRetries = 3;
+            this.basePlayerId = this.videoJSTag ? this.videoJSTag.id : null; // Store original ID
             
             if (this.videoJSTag) {
                 this.initPlayer();
@@ -50,20 +51,12 @@ $(document).ready(function () {
                 
                 // Properly dispose old player and clean up
                 if (this.player && !this.player.isDisposed()) {
-                    const oldId = this.player.id_;
-                    this.player.dispose();
-                    
-                    // Force cleanup of any remaining video.js references
-                    if (window.videojs && window.videojs.getPlayer) {
-                        try {
-                            const existingPlayer = window.videojs.getPlayer(oldId);
-                            if (existingPlayer && !existingPlayer.isDisposed()) {
-                                existingPlayer.dispose();
-                            }
-                        } catch (e) {
-                            // Player might not exist in registry, ignore
-                        }
+                    try {
+                        this.player.dispose();
+                    } catch (e) {
+                        console.warn('Error disposing player:', e);
                     }
+                    this.player = null;
                 }
                 
                 // Always create fresh DOM element for retries
@@ -74,14 +67,14 @@ $(document).ready(function () {
                         existingVideoJS.parentNode.removeChild(existingVideoJS);
                     }
                     
-                    // Insert fresh cloned element
+                    // Insert fresh cloned element with unique ID
                     this.videoJSTag = this.clonedVideoJSTagOriginal.cloneNode(true);
-                    
-                    // Force unique ID to prevent conflicts
-                    const originalId = this.videoJSTag.id;
-                    this.videoJSTag.id = originalId + '_retry_' + this.loadRetries + '_' + Date.now();
+                    this.videoJSTag.id = this.basePlayerId + '_retry_' + this.loadRetries + '_' + Date.now();
                     
                     this.rootElement.appendChild(this.videoJSTag);
+                } else if (this.loadRetries > 0) {
+                    // Ensure unique ID even for first element on retry
+                    this.videoJSTag.id = this.basePlayerId + '_retry_' + this.loadRetries + '_' + Date.now();
                 }
                 
                 // Ensure we have a valid element
@@ -89,30 +82,40 @@ $(document).ready(function () {
                     throw new Error('No valid video-js element available for player creation');
                 }
                 
-                // Initiate (new) player
-                console.log(`Media debug: Creating player for element:`, this.videoJSTag);
-                this.player = videojs(this.videoJSTag);
-                console.log(`Media debug: Player created with ID:`, this.player.id_);
-                this.loaded = false;
-                
-                // config player options
-                if (this.type === "video") {
-                    this.player.fluid(true);
-                }
-                
-                if (this.type === "audio") {
+                // Wait for DOM to be ready before creating player
+                setTimeout(() => {
                     try {
-                        this.player.controlBar.removeChild('subsCapsButton');
-                    } catch (e) {
-                        // Control might not exist yet, ignore
+                        // Initiate (new) player
+                        console.log(`Media debug: Creating player for element:`, this.videoJSTag);
+                        this.player = videojs(this.videoJSTag);
+                        console.log(`Media debug: Player created with ID:`, this.player.id_);
+                        this.loaded = false;
+                        
+                        // config player options
+                        if (this.type === "video") {
+                            this.player.fluid(true);
+                        }
+                        
+                        if (this.type === "audio") {
+                            this.player.ready(() => {
+                                try {
+                                    this.player.controlBar.removeChild('subsCapsButton');
+                                } catch (e) {
+                                    // Control might not exist yet, ignore
+                                }
+                            });
+                        }
+                        
+                        this.attachEventListeners();
+                        this.startLoadTimer();
+                    } catch (error) {
+                        console.error(`Failed to create player:`, error);
+                        this.reloadPlayer();
                     }
-                }
-                
-                this.attachEventListeners();
-                this.startLoadTimer();
+                }, 100); // Small delay to ensure DOM is ready
 
             } catch (error) {
-                console.error(`Failed to create player:`, error);
+                console.error(`Failed to initialize player:`, error);
                 this.reloadPlayer();
             }
         }
@@ -235,10 +238,10 @@ $(document).ready(function () {
         startLoadTimer = () => {
             this.loadTimer = setTimeout(() => {
                 if (!this.loaded) {
-                    if (debugLogsEnabled) console.log(`Player ${this.player.id_} - Load timeout, attempting reload`);
+                    if (debugLogsEnabled) console.log(`Player ${this.player?.id_ || 'unknown'} - Load timeout, attempting reload`);
                     this.reloadPlayer();
                 }
-            }, 5000); // Increased timeout to 5 seconds
+            }, 8000); // Increased timeout to 8 seconds for slower connections
         }
 
         clearLoadTimer = () => {
@@ -259,10 +262,10 @@ $(document).ready(function () {
             this.loadRetries++;
             if (debugLogsEnabled) console.log(`Player ${this.player?.id_ || 'unknown'}: Retry ${this.loadRetries}/${this.maxLoadRetries}`);
             
-            // Wait a bit and retry
+            // Wait a bit longer before retry to ensure cleanup is complete
             setTimeout(() => {
                 this.initPlayer();
-            }, 1000);
+            }, 2000);
         }
 
         testMetadata = data => {
